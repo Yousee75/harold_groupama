@@ -467,13 +467,67 @@
             border-left: 3px solid var(--success);
         }
 
-        /* Responsive */
+        /* ============================================= */
+        /* == SECTION RESPONSIVE POUR LES MOBILES == */
+        /* ============================================= */
         @media (max-width: 768px) {
-            .main-header h1 { font-size: 2rem; }
-            .subtitle { font-size: 1.1rem; }
-            .tools-grid { grid-template-columns: 1fr; }
-            .before-after-grid { grid-template-columns: 1fr; }
-            .tabs-nav { flex-direction: column; }
+            /* --- Espacement général & Layout --- */
+            .container {
+                padding: 1rem; /* Moins d'espacement sur les côtés */
+            }
+            .section {
+                padding: 1.5rem; /* Moins d'espacement dans les sections */
+            }
+            .main-header {
+                padding: 2.5rem 1rem; /* Moins d'espacement dans l'en-tête */
+                border-radius: 15px;
+            }
+
+            /* --- Typographie (taille des polices) --- */
+            .main-header h1 {
+                font-size: 1.8rem;
+            }
+            .subtitle {
+                font-size: 1rem;
+            }
+            .section-title {
+                font-size: 1.4rem;
+            }
+            .kpi-number {
+                font-size: 2rem;
+            }
+            .tool-card h3 {
+                font-size: 1.15rem;
+            }
+            body {
+                line-height: 1.6;
+            }
+
+            /* --- Ajustement des Grilles ("Tableaux") --- */
+            .tools-grid,
+            .before-after-grid,
+            .governance-grid,
+            .faq-columns {
+                grid-template-columns: 1fr; /* On passe tout sur 1 seule colonne pour éviter les débordements */
+            }
+            .kpi-section {
+                grid-template-columns: repeat(2, 1fr); /* Les KPI restent sur 2 colonnes, c'est plus joli */
+                gap: 1rem;
+            }
+
+            /* --- Ajustement des autres composants --- */
+            .tabs-nav {
+                flex-direction: column; /* Les boutons de navigation passent en colonne */
+                gap: 0.5rem;
+            }
+            .tab-button {
+                padding: 0.8rem 1rem;
+                width: 100%; /* Les boutons prennent toute la largeur */
+                justify-content: center;
+            }
+            .service-offer {
+                padding: 1.5rem;
+            }
         }
     </style>
 </head>
