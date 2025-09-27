@@ -3,857 +3,2966 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solutions d'Automatisation pour Équipes Actuarielles | Rapport Stratégique</title>
+    <title>Transformation Digitale Actuariat | Automatisation des Processus de Clôture</title>
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <!-- Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.1.0/typed.umd.js"></script>
+    
     <style>
-        :root {
-            --primary: #1a5276;
-            --secondary: #2e86c1;
-            --accent: #e74c3c;
-            --success: #27ae60;
-            --warning: #f39c12;
-            --info: #3498db;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
-            --text: #2c3e50;
-            --bg-gradient: linear-gradient(135deg, #1a5276 0%, #2e86c1 100%);
-            --card-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            --hover-shadow: 0 15px 35px rgba(0,0,0,0.12);
-            --section-spacing: 3rem;
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        :root {
+            /* Palette professionnelle actuariat */
+            --primary: #1a5276;
+            --secondary: #2874a6;
+            --accent: #27ae60;
+            --warning: #e74c3c;
+            --gold: #f39c12;
+            --dark: #17202a;
+            --text: #2c3e50;
+            --text-light: #5d6d7e;
+            --white: #ffffff;
+            --bg-light: #f8f9fa;
+            --bg-card: #ffffff;
+            --shadow-soft: rgba(0, 0, 0, 0.08);
+            --shadow-medium: rgba(0, 0, 0, 0.15);
+            --gradient-1: linear-gradient(135deg, #1a5276 0%, #2874a6 100%);
+            --gradient-2: linear-gradient(135deg, #27ae60 0%, #52be80 100%);
+            --gradient-3: linear-gradient(135deg, #e74c3c 0%, #ec7063 100%);
+            --gradient-warm: linear-gradient(135deg, #f39c12 0%, #f7dc6f 100%);
+        }
+
         body {
-            font-family: 'Poppins', sans-serif;
-            line-height: 1.7;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--white);
             color: var(--text);
-            background: linear-gradient(135deg, #f5f7fa 0%, #e3e8f0 100%);
-            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
+        /* Loader */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.5s, visibility 0.5s;
         }
 
-        /* Header moderne */
-        .main-header {
-            background: var(--bg-gradient);
-            color: white;
-            padding: 4rem 2rem;
-            text-align: center;
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-inner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--bg-light);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Navigation moderne */
+        nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 10px 20px;
+            box-shadow: 0 10px 40px var(--shadow-soft);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 10px 60px var(--shadow-medium);
+        }
+
+        .nav-items {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-item {
+            position: relative;
+            padding: 10px 20px;
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
             border-radius: 20px;
-            margin-bottom: var(--section-spacing);
-            box-shadow: var(--card-shadow);
+        }
+
+        .nav-item:hover {
+            color: var(--primary);
+            background: var(--bg-light);
+        }
+
+        .nav-item.active {
+            color: var(--white);
+            background: var(--gradient-1);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: linear-gradient(135deg, var(--bg-light) 0%, var(--white) 100%);
+            overflow: hidden;
+        }
+
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 1200px;
+            padding: 2rem;
+            z-index: 1;
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 24px;
+            background: var(--gradient-2);
+            color: white;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 900;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            color: var(--text-light);
+            margin-bottom: 3rem;
+        }
+
+        #typed-text {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .cta-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            padding: 18px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
             position: relative;
             overflow: hidden;
         }
 
-        .main-header::before {
+        .cta-primary {
+            background: var(--gradient-1);
+            color: white;
+            box-shadow: 0 10px 30px rgba(26, 82, 118, 0.3);
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(26, 82, 118, 0.4);
+        }
+
+        .cta-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .cta-secondary:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 100px 20px;
+            background: var(--bg-light);
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px var(--shadow-soft);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
-            background-size: cover;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-1);
         }
 
-        .main-header h1 {
-            font-size: 2.8rem;
-            margin-bottom: 1.5rem;
-            font-weight: 700;
-            position: relative;
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px var(--shadow-medium);
         }
 
-        .subtitle {
-            font-size: 1.3rem;
-            opacity: 0.95;
-            max-width: 800px;
-            margin: 0 auto 2rem;
-            font-weight: 300;
-            position: relative;
-            line-height: 1.6;
-        }
-        
-        /* Navigation par onglets */
-        .tabs-nav {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: var(--section-spacing);
-            flex-wrap: wrap;
-            justify-content: center;
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
         }
 
-        .tab-button {
-            background: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 50px;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            color: var(--primary);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: var(--card-shadow);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            position: relative;
-            overflow: hidden;
+        .stat-label {
+            font-size: 1.2rem;
+            color: var(--text-light);
         }
 
-        .tab-button:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--hover-shadow);
+        /* Section principale */
+        .report-section {
+            padding: 100px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
-        .tab-button.active {
-            background: var(--primary);
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-badge {
+            display: inline-block;
+            padding: 8px 24px;
+            background: var(--gradient-2);
             color: white;
-            transform: translateY(-2px);
-        }
-        
-        .tab-pane {
-            display: none;
-            animation: fadeInUp 0.6s ease-out;
-        }
-
-        .tab-pane.active {
-            display: block;
-        }
-
-        /* Sections modernisées */
-        .section {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 20px;
-            margin-bottom: var(--section-spacing);
-            box-shadow: var(--card-shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
-        .section.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .section:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--hover-shadow);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
         }
 
         .section-title {
-            color: var(--primary);
-            border-bottom: 3px solid var(--light);
-            padding-bottom: 1rem;
-            margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            font-size: 1.8rem;
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
         }
 
-        .section-title i {
-            font-size: 2rem;
-            color: var(--secondary);
-        }
-        
-        .problem-list, .benefit-list {
-            list-style: none;
-            padding-left: 0;
+        .section-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-light);
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        .problem-list li, .benefit-list li {
-            padding: 1rem 0;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-            transition: background-color 0.3s ease;
-            padding-left: 1rem;
-            border-radius: 8px;
-        }
-        
-        .problem-list li:before {
-            content: "❌";
-            font-size: 1.2rem;
-            color: var(--accent);
-            padding-top: 4px;
-        }
-
-        .benefit-list li:before {
-            content: "✨";
-            font-size: 1.2rem;
-            color: var(--success);
-            padding-top: 4px;
-        }
-
-        /* Grille d'outils moderne */
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .tool-card {
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-            padding: 2rem;
-            border-radius: 15px;
+        /* Cards glassmorphism */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px var(--shadow-soft);
             transition: all 0.3s ease;
-            border-left: 5px solid var(--secondary);
-            box-shadow: var(--card-shadow);
             position: relative;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px var(--shadow-medium);
+        }
+
+        /* Process cards grid */
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .process-card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 10px 30px var(--shadow-soft);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .process-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
             height: 100%;
+            background: var(--gradient-1);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 0;
         }
 
-        .tool-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--hover-shadow);
+        .process-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 50px var(--shadow-medium);
         }
 
-        .tool-card h3 {
-            color: var(--primary);
-            margin-bottom: 1rem;
+        .process-card:hover::after {
+            opacity: 0.05;
+        }
+
+        .process-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--gradient-1);
+            border-radius: 20px;
             display: flex;
             align-items: center;
-            gap: 1rem;
-            font-size: 1.3rem;
-        }
-
-        .tool-card h3 i {
-            color: var(--secondary);
-            font-size: 1.5rem;
-        }
-
-        .tool-description {
-            margin-bottom: 1.5rem;
-            flex-grow: 1;
-        }
-
-        /* Avant/Après amélioré */
-        .before-after-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-        
-        .before-after-card {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        
-        .before, .after {
-            padding: 1.5rem;
-            border-radius: 12px;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
             position: relative;
+            z-index: 1;
         }
 
-        .before {
-            background: linear-gradient(135deg, #ffeaea 0%, #ffcccc 100%);
-            border-left: 5px solid var(--accent);
-        }
-
-        .after {
-            background: linear-gradient(135deg, #e8f7ef 0%, #d4edda 100%);
-            border-left: 5px solid var(--success);
-        }
-
-        .before h3, .after h3 {
-            margin-bottom: 1rem;
-            color: var(--dark);
-        }
-        
-        /* KPI Section */
-        .kpi-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .kpi-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: var(--card-shadow);
-            border-top: 4px solid var(--info);
-            transition: transform 0.3s ease;
-        }
-
-        .kpi-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .kpi-number {
-            font-size: 2.5rem;
+        .process-title {
+            font-size: 1.5rem;
             font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
         }
 
-        .kpi-label {
-            font-size: 1rem;
-            color: #666;
-            font-weight: 500;
+        .process-description {
+            color: var(--text-light);
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
         }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+        .process-features {
+            margin-top: 20px;
+            position: relative;
+            z-index: 1;
         }
 
-        .highlight {
-            background: linear-gradient(120deg, #fff9c4 0%, #f3e5f5 100%);
-            padding: 0.2rem 0.5rem;
-            border-radius: 5px;
-            font-weight: 600;
+        .process-features li {
+            list-style: none;
+            padding: 8px 0;
+            color: var(--text);
+            position: relative;
+            padding-left: 30px;
         }
-        
-        .badge {
-            display: inline-block;
-            background-color: var(--info);
-            color: white;
-            padding: 0.4rem 1rem;
-            border-radius: 15px;
-            font-size: 0.9rem;
-            margin-top: auto;
+
+        .process-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
             font-weight: bold;
-            text-align: center;
+            font-size: 1.2rem;
         }
 
-        /* Timeline pour la feuille de route */
+        /* Timeline */
         .timeline {
             position: relative;
-            margin: 2rem 0;
-            padding-left: 40px;
+            padding: 60px 0;
         }
 
         .timeline::before {
             content: '';
             position: absolute;
-            left: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: var(--gradient-1);
             top: 0;
-            bottom: 0;
-            width: 3px;
-            background: var(--secondary);
         }
 
         .timeline-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 80px;
             position: relative;
-            margin-bottom: 2rem;
         }
 
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -37px;
-            top: 5px;
-            width: 20px;
-            height: 20px;
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            width: 45%;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px var(--shadow-soft);
+            position: relative;
+        }
+
+        .timeline-dot {
+            width: 30px;
+            height: 30px;
+            background: var(--gradient-1);
             border-radius: 50%;
-            background: var(--secondary);
-            border: 4px solid white;
-            box-shadow: 0 0 0 3px var(--secondary);
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid white;
+            box-shadow: 0 5px 15px var(--shadow-medium);
         }
 
-        .timeline-phase {
+        .timeline-date {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
             font-weight: 700;
             color: var(--primary);
-            margin-bottom: 0.5rem;
             font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .service-offer {
-            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
-            padding: 2rem;
-            border-radius: 15px;
-            margin: 2rem 0;
-            border-left: 5px solid var(--info);
+            background: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px var(--shadow-soft);
         }
 
-        .service-offer h3 {
-            color: var(--primary);
-            margin-bottom: 1rem;
+        .timeline-item:nth-child(odd) .timeline-date {
+            left: 55%;
+        }
+
+        .timeline-item:nth-child(even) .timeline-date {
+            right: 55%;
+        }
+
+        /* Graphiques */
+        .chart-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px var(--shadow-soft);
+            margin: 30px 0;
+        }
+
+        .chart-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 20px;
+        }
+
+        /* Process Flow Diagram */
+        .process-flow {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin: 40px 0;
+            box-shadow: 0 10px 30px var(--shadow-soft);
+        }
+
+        .flow-diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .flow-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .flow-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            background: var(--gradient-1);
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 1rem;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            box-shadow: 0 10px 30px rgba(26, 82, 118, 0.3);
         }
-        
-        .governance-grid {
+
+        .flow-title {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .flow-time {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .flow-arrow {
+            position: absolute;
+            top: 40px;
+            width: calc(100% - 200px);
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            left: 100px;
+            z-index: 1;
+        }
+
+        .flow-arrow::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: -4px;
+            width: 10px;
+            height: 10px;
+            border-top: 2px solid var(--secondary);
+            border-right: 2px solid var(--secondary);
+            transform: rotate(45deg);
+        }
+
+        /* Comparison table */
+        .comparison-table {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px var(--shadow-soft);
+            margin: 40px 0;
+        }
+
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th {
+            background: var(--gradient-1);
+            color: white;
+            padding: 20px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            padding: 20px;
+            border-bottom: 1px solid var(--bg-light);
+        }
+
+        .comparison-table tr:hover {
+            background: var(--bg-light);
+        }
+
+        .before-cell {
+            color: var(--warning);
+            font-weight: 500;
+        }
+
+        .after-cell {
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        /* Call to Action final */
+        .final-cta {
+            padding: 120px 20px;
+            background: var(--gradient-1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .final-cta::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .final-cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .final-cta h2 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            color: white;
+            margin-bottom: 30px;
+            font-weight: 900;
+        }
+
+        .final-cta p {
+            font-size: 1.4rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 40px;
+        }
+
+        .final-cta-button {
+            padding: 20px 50px;
+            font-size: 1.3rem;
+            background: white;
+            color: var(--primary);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .final-cta-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            padding: 80px 20px 30px;
+            background: var(--dark);
+            color: white;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin: 1.5rem 0;
-        }
-        
-        .governance-item {
-            background-color: #f0f7ff;
-            padding: 1.5rem;
-            border-radius: 10px;
-            border: 1px solid #d0e3f0;
+            gap: 50px;
+            margin-bottom: 50px;
         }
 
-        .governance-item h4 {
-            color: var(--primary);
-            margin-bottom: 0.5rem;
+        .footer-column h3 {
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .footer-column p,
+        .footer-column a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            line-height: 2;
+            transition: color 0.3s;
+        }
+
+        .footer-column a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal-left.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Progress bar */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--bg-light);
+            z-index: 10000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--gradient-1);
+            width: 0;
+            transition: width 0.1s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-items {
+                gap: 15px;
+            }
+            
+            .nav-item {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+
+            .timeline::before {
+                left: 30px;
+            }
+
+            .timeline-item {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                margin-left: 50px;
+            }
+
+            .timeline-content {
+                width: 100%;
+            }
+
+            .timeline-dot {
+                left: 30px;
+            }
+
+            .timeline-date {
+                position: static;
+                margin-bottom: 20px;
+            }
+
+            .process-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .flow-diagram {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .flow-arrow {
+                display: none;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .comparison-table {
+                overflow-x: auto;
+            }
+        }
+
+        /* Scroll to top */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-1);
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .faq-columns {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin: 1.5rem 0;
-        }
-        
-        .faq-item {
-            padding-bottom: 1rem;
-            border-bottom: 1px dashed #ccc;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px var(--shadow-medium);
         }
 
-        .faq-question {
-            font-weight: bold;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
+        .scroll-to-top.active {
+            opacity: 1;
+            visibility: visible;
         }
-        
-        .tool-before-after {
+
+        .scroll-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px var(--shadow-medium);
+        }
+
+        /* Modern Filter Tabs */
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 50px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            background: white;
+            border-radius: 20px;
+            padding: 8px;
+            box-shadow: 0 10px 40px var(--shadow-soft);
+            gap: 4px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-tab {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 16px;
+            background: transparent;
+            color: var(--text-light);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            min-width: 140px;
+            justify-content: center;
+        }
+
+        .filter-tab.active {
+            background: var(--gradient-1);
+            color: white;
+            box-shadow: 0 4px 15px rgba(26, 82, 118, 0.3);
+        }
+
+        .filter-tab:hover:not(.active) {
+            background: var(--bg-light);
+            color: var(--primary);
+        }
+
+        .filter-icon {
+            font-size: 1.2rem;
+        }
+
+        .filter-text {
+            font-size: 0.95rem;
+        }
+
+        .filter-count {
+            background: rgba(255, 255, 255, 0.2);
+            color: inherit;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .filter-tab.active .filter-count {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Modern Tool Cards */
+        .tools-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: 24px;
+            padding: 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .tool-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .tool-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 24px 24px 0;
+            margin-bottom: 20px;
+        }
+
+        .tool-icon-container {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
-            margin-top: 1rem;
-            font-size: 0.9em;
-        }
-        .tool-before {
-            background-color: #ffeaea;
-            padding: 0.5rem;
-            border-radius: 4px;
-            border-left: 3px solid var(--accent);
-        }
-        .tool-after {
-            background-color: #e8f7ef;
-            padding: 0.5rem;
-            border-radius: 4px;
-            border-left: 3px solid var(--success);
+            align-items: flex-start;
+            gap: 12px;
         }
 
-        /* ============================================= */
-        /* == SECTION RESPONSIVE POUR LES MOBILES == */
-        /* ============================================= */
-        @media (max-width: 768px) {
-            /* --- Espacement général & Layout --- */
-            .container {
-                padding: 1rem; /* Moins d'espacement sur les côtés */
-            }
-            .section {
-                padding: 1.5rem; /* Moins d'espacement dans les sections */
-            }
-            .main-header {
-                padding: 2.5rem 1rem; /* Moins d'espacement dans l'en-tête */
-                border-radius: 15px;
-            }
+        .tool-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--gradient-1);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 8px;
+            box-shadow: 0 8px 24px rgba(26, 82, 118, 0.2);
+        }
 
-            /* --- Typographie (taille des polices) --- */
-            .main-header h1 {
-                font-size: 1.8rem;
-            }
-            .subtitle {
-                font-size: 1rem;
-            }
-            .section-title {
-                font-size: 1.4rem;
-            }
-            .kpi-number {
-                font-size: 2rem;
-            }
-            .tool-card h3 {
-                font-size: 1.15rem;
-            }
-            body {
-                line-height: 1.6;
-            }
+        .tech-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
 
-            /* --- Ajustement des Grilles ("Tableaux") --- */
-            .tools-grid,
-            .before-after-grid,
-            .governance-grid,
-            .faq-columns {
-                grid-template-columns: 1fr; /* On passe tout sur 1 seule colonne pour éviter les débordements */
-            }
-            .kpi-section {
-                grid-template-columns: repeat(2, 1fr); /* Les KPI restent sur 2 colonnes, c'est plus joli */
-                gap: 1rem;
-            }
+        .tech-badge.python {
+            background: linear-gradient(135deg, #3776ab 0%, #4584b6 100%);
+            color: white;
+        }
 
-            /* --- Ajustement des autres composants --- */
-            .tabs-nav {
-                flex-direction: column; /* Les boutons de navigation passent en colonne */
-                gap: 0.5rem;
+        .tech-badge.vba {
+            background: linear-gradient(135deg, #217346 0%, #2d8f5d 100%);
+            color: white;
+        }
+
+        .tech-badge.sql {
+            background: linear-gradient(135deg, #e38c2d 0%, #f1a645 100%);
+            color: white;
+        }
+
+        .tool-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tool-action-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 12px;
+            background: var(--bg-light);
+            color: var(--text-light);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .tool-action-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .tool-content {
+            padding: 0 24px;
+        }
+
+        .tool-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .tool-description {
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .tool-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        .feature-icon {
+            font-size: 1.1rem;
+        }
+
+        .tool-footer {
+            background: linear-gradient(135deg, rgba(26, 82, 118, 0.05), rgba(39, 174, 96, 0.05));
+            padding: 20px 24px;
+            margin-top: 20px;
+        }
+
+        .tool-metrics {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .metric {
+            text-align: center;
+            flex: 1;
+        }
+
+        .metric-label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            display: block;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        /* Animation classes */
+        .tool-card.hidden {
+            display: none;
+        }
+
+        .tool-card.show {
+            display: block;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
             }
-            .tab-button {
-                padding: 0.8rem 1rem;
-                width: 100%; /* Les boutons prennent toute la largeur */
-                justify-content: center;
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
-            .service-offer {
-                padding: 1.5rem;
-            }
+        }
+
+        /* Modern Time Breakdown Visualization */
+        .time-breakdown-modern {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 249, 250, 0.95));
+            border-radius: 24px;
+            padding: 40px;
+            margin: 40px 0;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .breakdown-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--dark);
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .breakdown-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .time-categories {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .time-category {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .time-category::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .time-category.critical::before {
+            background: linear-gradient(180deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .time-category.high::before {
+            background: linear-gradient(180deg, #f39c12 0%, #e67e22 100%);
+        }
+
+        .time-category.medium::before {
+            background: linear-gradient(180deg, #3498db 0%, #2980b9 100%);
+        }
+
+        .time-category.good::before {
+            background: linear-gradient(180deg, #27ae60 0%, #229954 100%);
+        }
+
+        .time-category:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+        }
+
+        .time-category:hover::before {
+            width: 8px;
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .category-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex: 1;
+        }
+
+        .category-icon {
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-light);
+            border-radius: 14px;
+        }
+
+        .category-text h5 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin: 0 0 4px 0;
+        }
+
+        .category-text p {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            margin: 0;
+        }
+
+        .category-percentage {
+            text-align: right;
+            min-width: 80px;
+        }
+
+        .percentage-value {
+            display: block;
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .percentage-label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: var(--bg-light);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 16px 0;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            position: relative;
+            transition: width 2s ease-out;
+            width: 0;
+        }
+
+        .critical .progress-fill {
+            background: linear-gradient(90deg, #e74c3c 0%, #c0392b 100%);
+            box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+        }
+
+        .high .progress-fill {
+            background: linear-gradient(90deg, #f39c12 0%, #e67e22 100%);
+            box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3);
+        }
+
+        .medium .progress-fill {
+            background: linear-gradient(90deg, #3498db 0%, #2980b9 100%);
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+        }
+
+        .good .progress-fill {
+            background: linear-gradient(90deg, #27ae60 0%, #229954 100%);
+            box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
+        }
+
+        .category-impact {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .impact-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .impact-badge.critical {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(192, 57, 43, 0.1));
+            color: #c0392b;
+            border: 1px solid rgba(231, 76, 60, 0.2);
+        }
+
+        .impact-badge.high {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(230, 126, 34, 0.1));
+            color: #e67e22;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+        }
+
+        .impact-badge.medium {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(41, 128, 185, 0.1));
+            color: #2980b9;
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+
+        .impact-badge.good {
+            background: linear-gradient(135deg, rgba(39, 174, 96, 0.1), rgba(34, 153, 84, 0.1));
+            color: #229954;
+            border: 1px solid rgba(39, 174, 96, 0.2);
+        }
+
+        .time-equivalent {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .breakdown-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid var(--bg-light);
+        }
+
+        .summary-stat {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .summary-stat:hover {
+            transform: translateY(-2px);
+        }
+
+        .critical-stat {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.08), rgba(192, 57, 43, 0.08));
+            border: 2px solid rgba(231, 76, 60, 0.15);
+        }
+
+        .good-stat {
+            background: linear-gradient(135deg, rgba(39, 174, 96, 0.08), rgba(34, 153, 84, 0.08));
+            border: 2px solid rgba(39, 174, 96, 0.15);
+        }
+
+        .potential-stat {
+            background: linear-gradient(135deg, rgba(26, 82, 118, 0.08), rgba(40, 116, 166, 0.08));
+            border: 2px solid rgba(26, 82, 118, 0.15);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 14px;
+        }
+
+        .stat-content {
+            flex: 1;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--dark);
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.3;
+        }
+
+        /* Automation showcase */
+        .automation-showcase {
+            background: linear-gradient(135deg, rgba(26, 82, 118, 0.05), rgba(39, 174, 96, 0.05));
+            padding: 40px;
+            border-radius: 20px;
+            margin: 40px 0;
+        }
+
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .showcase-item {
+            text-align: center;
+        }
+
+        .showcase-icon {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 20px var(--shadow-soft);
+        }
+
+        .showcase-title {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .showcase-desc {
+            color: var(--text-light);
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header class="main-header">
-            <h1><i class="fas fa-brain"></i> Solutions d'Automatisation pour Équipes Actuarielles</h1>
-            <p class="subtitle">Optimiser le potentiel de vos équipes grâce à l'automatisation intelligente des processus répétitifs</p>
-        </header>
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-inner"></div>
+    </div>
 
-        <nav class="tabs-nav">
-            <button class="tab-button active" data-tab="resume"><i class="fas fa-file-signature"></i> Résumé</button>
-            <button class="tab-button" data-tab="benefices"><i class="fas fa-rocket"></i> Bénéfices</button>
-            <button class="tab-button" data-tab="solutions"><i class="fas fa-toolbox"></i> Solutions</button>
-            <button class="tab-button" data-tab="feuille-route"><i class="fas fa-road"></i> Feuille de Route</button>
-            <button class="tab-button" data-tab="gouvernance"><i class="fas fa-lock"></i> Gouvernance & FAQ</button>
-            <button class="tab-button" data-tab="personnalisation"><i class="fas fa-drafting-compass"></i> Personnalisation</button>
-        </nav>
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
 
-        <div id="resume" class="tab-pane active">
-            <section class="section">
-                <h2 class="section-title"><i class="fas fa-file-signature"></i> Résumé Exécutif</h2>
-                <p>En tant que manager d'équipes actuarielles, votre quotidien est rythmé par les cycles de clôture, les reporting réglementaires et la gestion des processus complexes. Vos équipes consacrent actuellement <span class="highlight">30 à 50% de leur temps</span> à des tâches manuelles et répétitives (consolidations, contrôles, reporting) plutôt qu'à l'analyse stratégique. Cette situation génère des erreurs, du stress et une sous-utilisation des compétences expertes.</p>
-                <p>Nous vous proposons de déployer une série d'<span class="highlight">automatisations ciblées</span> : des outils internes simples, développés en Python/VBA, sans besoin de droits administrateur, qui permettent de :</p>
-                <ul class="benefit-list">
-                    <li>Automatiser les tâches répétitives et chronophages</li>
-                    <li>Fiabiliser les données et processus</li>
-                    <li>Améliorer la visibilité et la transparence</li>
-                    <li>Libérer du temps pour l'analyse à valeur ajoutée</li>
-                </ul>
-                <p><strong>Objectif :</strong> Un retour sur investissement visible dès le premier cycle de clôture, avec des gains de productivité de 30 à 50% sur les processus automatisés.</p>
-            </section>
-            
-            <section class="section">
-                <h2 class="section-title"><i class="fas fa-tachometer-alt"></i> Indicateurs de Performance Attendus</h2>
-                <div class="kpi-section">
-                    <div class="kpi-card">
-                        <div class="kpi-number">30-50%</div>
-                        <div class="kpi-label">Gain de productivité</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-number">80%</div>
-                        <div class="kpi-label">Réduction des erreurs</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-number">70%</div>
-                        <div class="kpi-label">Diminution reporting</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-number">1 sem.</div>
-                        <div class="kpi-label">Déploiement premier outil</div>
-                    </div>
-                </div>
-            </section>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-items">
+            <a href="#home" class="nav-item active">Accueil</a>
+            <a href="#problem" class="nav-item">Enjeux</a>
+            <a href="#solutions" class="nav-item">Solutions</a>
+            <a href="#process" class="nav-item">Processus</a>
+            <a href="#roi" class="nav-item">ROI</a>
+            <a href="#contact" class="nav-item">Contact</a>
+        </div>
+    </nav>
 
-             <section class="section">
-                <h2 class="section-title"><i class="fas fa-lightbulb"></i> Message Clé</h2>
-                <div class="service-offer">
-                    <p style="font-size: 1.1rem; margin: 15px 0; text-align: center; font-style: italic;">"Nous ne proposons pas de révolutionner nos systèmes ni de déployer des solutions complexes et coûteuses. 
-                    Il s'agit simplement de développer des <span class="highlight">outils internes ciblés</span> qui répondent à des besoins concrets, 
-                    améliorent immédiatement notre efficacité opérationnelle et nous permettent de <span class="highlight">recentrer nos experts sur leur valeur ajoutée stratégique</span>."</p>
-                    <p style="text-align: center; font-weight: 600;">L'objectif est triple : <strong>fiabiliser</strong> nos processus, <strong>libérer du temps expert</strong> et <strong>améliorer notre agilité</strong> face aux enjeux réglementaires et business.</p>
-                </div>
-            </section>
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div id="particles-js"></div>
+        <div class="hero-content reveal">
+            <div class="hero-badge">🚀 Transformation Digitale Actuariat</div>
+            <h1 class="hero-title">Automatisez vos Clôtures<br>Libérez votre Expertise</h1>
+            <p class="hero-subtitle">
+                <span id="typed-text"></span>
+            </p>
+            <div class="cta-container">
+                <a href="#problem" class="cta-button cta-primary">Découvrir les Solutions</a>
+                <a href="#contact" class="cta-button cta-secondary">Planifier une Démo</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number" data-target="60">0</div>
+                <div class="stat-label">% du temps sur<br>tâches manuelles</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-target="80">0</div>
+                <div class="stat-label">% d'erreurs<br>évitables</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-target="3">0</div>
+                <div class="stat-label">jours de retard<br>moyenne clôture</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-target="40">0</div>
+                <div class="stat-label">% de temps expert<br>sous-valorisé</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Problématique -->
+    <section class="report-section" id="problem">
+        <div class="section-header reveal">
+            <span class="section-badge">Diagnostic</span>
+            <h2 class="section-title">La Réalité des Équipes Actuarielles</h2>
+            <p class="section-subtitle">Entre contraintes réglementaires et pression opérationnelle</p>
         </div>
 
-        <div id="benefices" class="tab-pane">
-            <section class="section">
-                <h2 class="section-title"><i class="fas fa-rocket"></i> Bénéfices Mesurables et Impact Stratégique</h2>
+        <div class="glass-card reveal">
+            <h3 style="font-size: 2rem; margin-bottom: 30px; color: var(--dark);">📊 État des Lieux : Le Paradoxe de l'Expertise Sous-Utilisée</h3>
+            
+            <!-- Nouvelle visualisation moderne du temps -->
+            <div class="time-breakdown-modern">
+                <h4 class="breakdown-title">Répartition Actuelle du Temps des Équipes</h4>
+                <p class="breakdown-subtitle">Une expertise sous-exploitée à cause des tâches répétitives</p>
                 
-                <div class="before-after-grid">
-                    <div class="before">
-                        <h3>Situation Actuelle</h3>
-                        <ul class="problem-list">
-                            <li>Délais de clôture tendus avec risques de retard</li>
-                            <li>Erreurs récurrentes impactant la fiabilité des données</li>
-                            <li>Faible valorisation des compétences expertes</li>
-                            <li>Difficulté à attirer et retenir les jeunes talents</li>
-                            <li>Image peu moderne auprès des régulateurs et auditeurs</li>
+                <div class="time-categories">
+                    <div class="time-category critical" data-percentage="30">
+                        <div class="category-header">
+                            <div class="category-info">
+                                <span class="category-icon">🔄</span>
+                                <div class="category-text">
+                                    <h5>Consolidation Manuelle</h5>
+                                    <p>Saisie, compilation, vérification</p>
+                                </div>
+                            </div>
+                            <div class="category-percentage">
+                                <span class="percentage-value">30%</span>
+                                <span class="percentage-label">du temps</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" data-width="30"></div>
+                        </div>
+                        <div class="category-impact">
+                            <span class="impact-badge critical">🚨 Très critique</span>
+                            <span class="time-equivalent">≈ 2,4 jours/semaine</span>
+                        </div>
+                    </div>
+
+                    <div class="time-category high" data-percentage="25">
+                        <div class="category-header">
+                            <div class="category-info">
+                                <span class="category-icon">📋</span>
+                                <div class="category-text">
+                                    <h5>Copy-Paste & Transferts</h5>
+                                    <p>Entre systèmes, fichiers Excel</p>
+                                </div>
+                            </div>
+                            <div class="category-percentage">
+                                <span class="percentage-value">25%</span>
+                                <span class="percentage-label">du temps</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" data-width="25"></div>
+                        </div>
+                        <div class="category-impact">
+                            <span class="impact-badge high">⚠️ Critique</span>
+                            <span class="time-equivalent">≈ 2 jours/semaine</span>
+                        </div>
+                    </div>
+
+                    <div class="time-category medium" data-percentage="20">
+                        <div class="category-header">
+                            <div class="category-info">
+                                <span class="category-icon">👁️</span>
+                                <div class="category-text">
+                                    <h5>Contrôles Visuels</h5>
+                                    <p>Vérifications manuelles, validation</p>
+                                </div>
+                            </div>
+                            <div class="category-percentage">
+                                <span class="percentage-value">20%</span>
+                                <span class="percentage-label">du temps</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" data-width="20"></div>
+                        </div>
+                        <div class="category-impact">
+                            <span class="impact-badge medium">⚡ Moyen</span>
+                            <span class="time-equivalent">≈ 1,6 jour/semaine</span>
+                        </div>
+                    </div>
+
+                    <div class="time-category medium" data-percentage="15">
+                        <div class="category-header">
+                            <div class="category-info">
+                                <span class="category-icon">📊</span>
+                                <div class="category-text">
+                                    <h5>Reporting Manuel</h5>
+                                    <p>Génération tableaux, présentation</p>
+                                </div>
+                            </div>
+                            <div class="category-percentage">
+                                <span class="percentage-value">15%</span>
+                                <span class="percentage-label">du temps</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" data-width="15"></div>
+                        </div>
+                        <div class="category-impact">
+                            <span class="impact-badge medium">⚡ Moyen</span>
+                            <span class="time-equivalent">≈ 1,2 jour/semaine</span>
+                        </div>
+                    </div>
+
+                    <div class="time-category good" data-percentage="10">
+                        <div class="category-header">
+                            <div class="category-info">
+                                <span class="category-icon">🧠</span>
+                                <div class="category-text">
+                                    <h5>Analyse Stratégique</h5>
+                                    <p>Expertise actuarielle, innovation</p>
+                                </div>
+                            </div>
+                            <div class="category-percentage">
+                                <span class="percentage-value">10%</span>
+                                <span class="percentage-label">du temps</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" data-width="10"></div>
+                        </div>
+                        <div class="category-impact">
+                            <span class="impact-badge good">✅ Optimal</span>
+                            <span class="time-equivalent">≈ 0,8 jour/semaine</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="breakdown-summary">
+                    <div class="summary-stat critical-stat">
+                        <div class="stat-icon">⚠️</div>
+                        <div class="stat-content">
+                            <span class="stat-number">90%</span>
+                            <span class="stat-label">Tâches répétitives automatisables</span>
+                        </div>
+                    </div>
+                    <div class="summary-stat good-stat">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-content">
+                            <span class="stat-number">10%</span>
+                            <span class="stat-label">Temps dédié à l'expertise</span>
+                        </div>
+                    </div>
+                    <div class="summary-stat potential-stat">
+                        <div class="stat-icon">🚀</div>
+                        <div class="stat-content">
+                            <span class="stat-number">x9</span>
+                            <span class="stat-label">Potentiel d'amélioration</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: linear-gradient(135deg, rgba(231, 76, 60, 0.05), rgba(243, 156, 18, 0.05)); padding: 30px; border-radius: 20px; margin: 30px 0;">
+                <h4 style="color: var(--warning); margin-bottom: 20px; font-size: 1.5rem;">⚠️ Problèmes Critiques Identifiés</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px;">
+                    <div>
+                        <h5 style="color: var(--dark); margin-bottom: 10px;">🔄 Processus Manuels</h5>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="padding: 8px 0;">• Consolidation Excel manuelle</li>
+                            <li style="padding: 8px 0;">• Copy-paste entre systèmes</li>
+                            <li style="padding: 8px 0;">• Contrôles visuels répétitifs</li>
+                            <li style="padding: 8px 0;">• Reconciliations manuelles</li>
                         </ul>
                     </div>
-                    
-                    <div class="after">
-                        <h3>Avec les Automatisations</h3>
-                        <ul class="benefit-list">
-                            <li><strong>Fiabilité accrue</strong> : Réduction drastique des erreurs, meilleure image</li>
-                            <li><strong>Efficacité multipliée</strong> : Gain de 30-50% sur les tâches répétitives</li>
-                            <li><strong>Visibilité totale</strong> : Suivi en temps réel, anticipation des risques</li>
-                            <li><strong>Valorisation des compétences</strong> : Recentrage sur l'analyse stratégique</li>
-                            <li><strong>Attractivité renforcée</strong> : Environnement de travail moderne pour les talents</li>
+                    <div>
+                        <h5 style="color: var(--dark); margin-bottom: 10px;">⏰ Pression Temporelle</h5>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="padding: 8px 0;">• Délais réglementaires serrés</li>
+                            <li style="padding: 8px 0;">• Clôtures mensuelles tendues</li>
+                            <li style="padding: 8px 0;">• Reporting multiples</li>
+                            <li style="padding: 8px 0;">• Heures supplémentaires</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5 style="color: var(--dark); margin-bottom: 10px;">💔 Impact Humain</h5>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="padding: 8px 0;">• Stress en période de clôture</li>
+                            <li style="padding: 8px 0;">• Démotivation des experts</li>
+                            <li style="padding: 8px 0;">• Turnover des talents</li>
+                            <li style="padding: 8px 0;">• Peu de temps pour l'analyse</li>
                         </ul>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div class="glass-card reveal">
+            <h3 style="font-size: 2rem; margin-bottom: 30px; color: var(--dark);">🎯 L'Opportunité : Transformer la Contrainte en Avantage</h3>
+            
+            <!-- Processus de transformation visualisé -->
+            <div class="process-flow">
+                <h4 style="color: var(--primary); margin-bottom: 30px;">Cycle de Clôture : Avant vs Après Automatisation</h4>
+                <div class="flow-diagram">
+                    <div class="flow-step">
+                        <div class="flow-icon">📥</div>
+                        <div class="flow-title">Collecte Données</div>
+                        <div class="flow-time">Avant: 2 jours → Après: 2h</div>
+                    </div>
+                    <div class="flow-arrow"></div>
+                    <div class="flow-step">
+                        <div class="flow-icon">🔄</div>
+                        <div class="flow-title">Consolidation</div>
+                        <div class="flow-time">Avant: 3 jours → Après: 30min</div>
+                    </div>
+                    <div class="flow-arrow"></div>
+                    <div class="flow-step">
+                        <div class="flow-icon">✅</div>
+                        <div class="flow-title">Contrôles</div>
+                        <div class="flow-time">Avant: 2 jours → Après: Auto</div>
+                    </div>
+                    <div class="flow-arrow"></div>
+                    <div class="flow-step">
+                        <div class="flow-icon">📊</div>
+                        <div class="flow-title">Reporting</div>
+                        <div class="flow-time">Avant: 1 jour → Après: 1 clic</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table de comparaison -->
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Processus</th>
+                            <th>Situation Actuelle</th>
+                            <th>Avec Automatisation</th>
+                            <th>Gain</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Provisionnement Chain Ladder</strong></td>
+                            <td class="before-cell">2 jours manuels Excel</td>
+                            <td class="after-cell">15 minutes automatisées</td>
+                            <td><span style="color: var(--accent); font-weight: 700;">95%</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Consolidation multi-entités</strong></td>
+                            <td class="before-cell">3 jours de compilation</td>
+                            <td class="after-cell">30 minutes en 1 clic</td>
+                            <td><span style="color: var(--accent); font-weight: 700;">96%</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Contrôles de cohérence</strong></td>
+                            <td class="before-cell">1 jour de vérifications</td>
+                            <td class="after-cell">Instantané avec alertes</td>
+                            <td><span style="color: var(--accent); font-weight: 700;">100%</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Génération QRT Solvabilité II</strong></td>
+                            <td class="before-cell">2 jours de préparation</td>
+                            <td class="after-cell">Généré automatiquement</td>
+                            <td><span style="color: var(--accent); font-weight: 700;">90%</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Analyse des écarts</strong></td>
+                            <td class="before-cell">Analyses ponctuelles</td>
+                            <td class="after-cell">Dashboard temps réel</td>
+                            <td><span style="color: var(--accent); font-weight: 700;">80%</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Solutions -->
+    <section class="report-section" id="solutions">
+        <div class="section-header reveal">
+            <span class="section-badge">Catalogue</span>
+            <h2 class="section-title">Nos Outils d'Automatisation Python & VBA</h2>
+            <p class="section-subtitle">Solutions pratiques, déployables immédiatement, sans droits administrateur</p>
+        </div>
+
+        <!-- Filtres de navigation modernes -->
+        <div class="filter-container">
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="all">
+                    <span class="filter-icon">🔹</span>
+                    <span class="filter-text">Tous les outils</span>
+                    <span class="filter-count">8</span>
+                </button>
+                <button class="filter-tab" data-filter="cloture">
+                    <span class="filter-icon">📊</span>
+                    <span class="filter-text">Clôture</span>
+                    <span class="filter-count">2</span>
+                </button>
+                <button class="filter-tab" data-filter="provision">
+                    <span class="filter-icon">💰</span>
+                    <span class="filter-text">Provisionnement</span>
+                    <span class="filter-count">2</span>
+                </button>
+                <button class="filter-tab" data-filter="controle">
+                    <span class="filter-icon">✅</span>
+                    <span class="filter-text">Contrôles</span>
+                    <span class="filter-count">2</span>
+                </button>
+                <button class="filter-tab" data-filter="reporting">
+                    <span class="filter-icon">📑</span>
+                    <span class="filter-text">Reporting</span>
+                    <span class="filter-count">2</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="glass-card reveal">
+            <h3 style="font-size: 2rem; margin-bottom: 20px; color: var(--dark); text-align: center;">🚀 Technologies Utilisées</h3>
+            <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-bottom: 30px;">
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; margin-bottom: 10px;">🐍</div>
+                    <h4 style="color: var(--primary);">Python</h4>
+                    <p style="color: var(--text-light);">Pandas, NumPy, Openpyxl<br>Pour l'analyse de données</p>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; margin-bottom: 10px;">📊</div>
+                    <h4 style="color: var(--primary);">Excel VBA</h4>
+                    <p style="color: var(--text-light);">Macros, UserForms<br>Intégration native Office</p>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; margin-bottom: 10px;">🔗</div>
+                    <h4 style="color: var(--primary);">SQL</h4>
+                    <p style="color: var(--text-light);">Connexions bases<br>Requêtes automatisées</p>
+                </div>
+            </div>
+            <p style="text-align: center; color: var(--accent); font-weight: 600; font-size: 1.1rem;">
+                ✔️ Sans installation complexe &nbsp;&nbsp; ✔️ Compatible environnement entreprise &nbsp;&nbsp; ✔️ Maintenance simple
+            </p>
+        </div>
+
+        <div class="tools-container" id="tools-grid">
+            <!-- Outil Clôture 1 -->
+            <div class="tool-card reveal" data-category="cloture" data-tech="python">
+                <div class="tool-header">
+                    <div class="tool-icon-container">
+                        <div class="tool-icon">🔄</div>
+                        <div class="tech-badge python">Python</div>
+                    </div>
+                    <div class="tool-actions">
+                        <button class="tool-action-btn" title="Voir démo">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
                 
-                <div class="service-offer">
-                    <h3><i class="fas fa-calculator"></i> Impact Financier Estimé</h3>
-                    <p>Sur la base d'une équipe type :</p>
-                    <ul class="benefit-list">
-                        <li><strong>Gain de productivité significatif</strong> sur les processus automatisés</li>
-                        <li><strong>Réduction des erreurs</strong> avec économies sur corrections et pénalités</li>
-                        <li><strong>Meilleure allocation des ressources</strong> : Valorisation stratégique améliorée</li>
-                        <li><strong>ROI rapide</strong> : Investissement initial rapidement amorti</li>
+                <div class="tool-content">
+                    <h3 class="tool-title">Consolidation Multi-Sources</h3>
+                    <p class="tool-description">Script Python automatisant la consolidation de données depuis Excel, CSV, bases SQL avec interface graphique intuitive.</p>
+                    
+                    <div class="tool-features">
+                        <div class="feature-item">
+                            <span class="feature-icon">📊</span>
+                            <span>Multi-formats automatique</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">⚙️</span>
+                            <span>Configuration INI</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🔍</span>
+                            <span>Détection d'écarts</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">💾</span>
+                            <span>Export Excel formaté</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tool-footer">
+                    <div class="tool-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Gain de temps</span>
+                            <span class="metric-value">95%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">De 3 jours à</span>
+                            <span class="metric-value">30 min</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Outil Provision 1 -->
+            <div class="tool-card reveal" data-category="provision" data-tech="vba">
+                <div class="tool-header">
+                    <div class="tool-icon-container">
+                        <div class="tool-icon">📈</div>
+                        <div class="tech-badge vba">VBA Excel</div>
+                    </div>
+                    <div class="tool-actions">
+                        <button class="tool-action-btn" title="Voir démo">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="tool-content">
+                    <h3 class="tool-title">Chain Ladder Automatisé</h3>
+                    <p class="tool-description">Classeur Excel avec macros VBA calculant automatiquement les provisions par la méthode Chain Ladder avec graphiques dynamiques.</p>
+                    
+                    <div class="tool-features">
+                        <div class="feature-item">
+                            <span class="feature-icon">🔺</span>
+                            <span>Triangles automatiques</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📊</span>
+                            <span>Facteurs développement</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🎯</span>
+                            <span>Best Estimate</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📋</span>
+                            <span>Rapports intégrés</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tool-footer">
+                    <div class="tool-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Gain de temps</span>
+                            <span class="metric-value">93%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">De 2 jours à</span>
+                            <span class="metric-value">15 min</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Outil Contrôle 1 -->
+            <div class="tool-card reveal" data-category="controle" data-tech="python">
+                <div class="tool-header">
+                    <div class="tool-icon-container">
+                        <div class="tool-icon">✅</div>
+                        <div class="tech-badge python">Python</div>
+                    </div>
+                    <div class="tool-actions">
+                        <button class="tool-action-btn" title="Voir démo">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="tool-content">
+                    <h3 class="tool-title">Contrôles Automatisés</h3>
+                    <p class="tool-description">Programme Python exécutant une batterie de contrôles paramétrables avec génération de rapport HTML détaillé.</p>
+                    
+                    <div class="tool-features">
+                        <div class="feature-item">
+                            <span class="feature-icon">🔢</span>
+                            <span>+100 contrôles</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🚨</span>
+                            <span>Alertes criticité</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📄</span>
+                            <span>Rapports HTML</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📚</span>
+                            <span>Historique anomalies</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tool-footer">
+                    <div class="tool-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Réduction erreurs</span>
+                            <span class="metric-value">80%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Détection</span>
+                            <span class="metric-value">Auto</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Outil Reporting 1 -->
+            <div class="tool-card reveal" data-category="reporting" data-tech="vba">
+                <div class="tool-header">
+                    <div class="tool-icon-container">
+                        <div class="tool-icon">📊</div>
+                        <div class="tech-badge vba">VBA Excel</div>
+                    </div>
+                    <div class="tool-actions">
+                        <button class="tool-action-btn" title="Voir démo">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="tool-content">
+                    <h3 class="tool-title">Dashboard Clôture</h3>
+                    <p class="tool-description">Tableau de bord Excel avec actualisation automatique, graphiques dynamiques et KPIs temps réel pour le suivi de clôture.</p>
+                    
+                    <div class="tool-features">
+                        <div class="feature-item">
+                            <span class="feature-icon">⚡</span>
+                            <span>Temps réel</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📈</span>
+                            <span>20+ indicateurs</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🎨</span>
+                            <span>Graphiques interactifs</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">💼</span>
+                            <span>Export PowerPoint</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tool-footer">
+                    <div class="tool-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Visibilité</span>
+                            <span class="metric-value">100%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Mode</span>
+                            <span class="metric-value">Temps réel</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Outil Reporting 2 -->
+            <div class="tool-card reveal" data-category="reporting" data-tech="python">
+                <div class="tool-header">
+                    <div class="tool-icon-container">
+                        <div class="tool-icon">📑</div>
+                        <div class="tech-badge python">Python</div>
+                    </div>
+                    <div class="tool-actions">
+                        <button class="tool-action-btn" title="Voir démo">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="tool-content">
+                    <h3 class="tool-title">QRT Solvabilité II</h3>
+                    <p class="tool-description">Script Python générant automatiquement les états QRT réglementaires à partir de vos données, avec validation intégrée.</p>
+                    
+                    <div class="tool-features">
+                        <div class="feature-item">
+                            <span class="feature-icon">📋</span>
+                            <span>Templates EIOPA</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🔗</span>
+                            <span>Mapping automatique</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">✅</span>
+                            <span>Validation contraintes</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📤</span>
+                            <span>Export XBRL</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tool-footer">
+                    <div class="tool-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Gain de temps</span>
+                            <span class="metric-value">90%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">De 2 jours à</span>
+                            <span class="metric-value">2h</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Outil Provision 2 -->
+            <div class="tool-card reveal" data-category="provision" data-tech="python">
+                <div class="tool-header">
+                    <div class="tool-icon-container">
+                        <div class="tool-icon">🔍</div>
+                        <div class="tech-badge python">Python</div>
+                    </div>
+                    <div class="tool-actions">
+                        <button class="tool-action-btn" title="Voir démo">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="tool-content">
+                    <h3 class="tool-title">Analyse Sinistralité</h3>
+                    <p class="tool-description">Outil Python d'analyse avancée de la sinistralité avec détection automatique des tendances et dérives anormales.</p>
+                    
+                    <div class="tool-features">
+                        <div class="feature-item">
+                            <span class="feature-icon">🎯</span>
+                            <span>Segmentation auto</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📊</span>
+                            <span>Détection outliers</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🔮</span>
+                            <span>Analyse prédictive</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📈</span>
+                            <span>Rapports visuels</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tool-footer">
+                    <div class="tool-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Détection</span>
+                            <span class="metric-value">3x</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Plus rapide</span>
+                            <span class="metric-value">vs manuel</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Outil Clôture 2 -->
+            <div class="tool-card reveal" data-category="cloture" data-tech="vba">
+                <div class="tool-header">
+                    <div class="tool-icon-container">
+                        <div class="tool-icon">🔒</div>
+                        <div class="tech-badge vba">VBA Excel</div>
+                    </div>
+                    <div class="tool-actions">
+                        <button class="tool-action-btn" title="Voir démo">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="tool-content">
+                    <h3 class="tool-title">Workflow Validation</h3>
+                    <p class="tool-description">Système de validation par étapes dans Excel avec traçabilité complète, notifications automatiques et tableau de suivi.</p>
+                    
+                    <div class="tool-features">
+                        <div class="feature-item">
+                            <span class="feature-icon">⚡</span>
+                            <span>Circuit configurable</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📧</span>
+                            <span>Notifications email</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📋</span>
+                            <span>Historique validations</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📊</span>
+                            <span>Dashboard suivi</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tool-footer">
+                    <div class="tool-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Conformité</span>
+                            <span class="metric-value">100%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Traçabilité</span>
+                            <span class="metric-value">Complète</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Outil Contrôle 2 -->
+            <div class="tool-card reveal" data-category="controle" data-tech="python">
+                <div class="tool-header">
+                    <div class="tool-icon-container">
+                        <div class="tool-icon">🔎</div>
+                        <div class="tech-badge python">Python</div>
+                    </div>
+                    <div class="tool-actions">
+                        <button class="tool-action-btn" title="Voir démo">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="tool-content">
+                    <h3 class="tool-title">Réconciliation Auto</h3>
+                    <p class="tool-description">Programme Python comparant automatiquement plusieurs sources de données et identifiant les écarts avec suggestions de correction.</p>
+                    
+                    <div class="tool-features">
+                        <div class="feature-item">
+                            <span class="feature-icon">🔄</span>
+                            <span>Multi-sources</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🎯</span>
+                            <span>Matching intelligent</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📋</span>
+                            <span>Rapport écarts</span>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🔧</span>
+                            <span>Suggestions corrections</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tool-footer">
+                    <div class="tool-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Efficacité</span>
+                            <span class="metric-value">99%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">De 1 jour à</span>
+                            <span class="metric-value">10 min</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Nouveau système de filtrage moderne
+            document.addEventListener('DOMContentLoaded', function() {
+                const filterTabs = document.querySelectorAll('.filter-tab');
+                const toolCards = document.querySelectorAll('.tool-card');
+
+                filterTabs.forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        const category = this.dataset.filter;
+                        
+                        // Update active tab
+                        filterTabs.forEach(t => t.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        // Filter tools with animation
+                        toolCards.forEach(card => {
+                            const cardCategory = card.dataset.category;
+                            
+                            if (category === 'all' || cardCategory === category) {
+                                card.style.display = 'block';
+                                card.classList.remove('hidden');
+                                card.classList.add('show');
+                            } else {
+                                card.style.display = 'none';
+                                card.classList.add('hidden');
+                                card.classList.remove('show');
+                            }
+                        });
+                    });
+                });
+            });
+        </script>
+
+        <!-- Showcase des fonctionnalités -->
+        <div class="automation-showcase reveal">
+            <h3 style="color: var(--dark); margin-bottom: 20px; text-align: center;">🛡️ Sécurité & Gouvernance Intégrées</h3>
+            <div class="showcase-grid">
+                <div class="showcase-item">
+                    <div class="showcase-icon">🔐</div>
+                    <div class="showcase-title">Audit Trail</div>
+                    <div class="showcase-desc">Traçabilité complète</div>
+                </div>
+                <div class="showcase-item">
+                    <div class="showcase-icon">👤</div>
+                    <div class="showcase-title">Gestion Droits</div>
+                    <div class="showcase-desc">Accès granulaires</div>
+                </div>
+                <div class="showcase-item">
+                    <div class="showcase-icon">📝</div>
+                    <div class="showcase-title">Logs Détaillés</div>
+                    <div class="showcase-desc">Qui, quoi, quand</div>
+                </div>
+                <div class="showcase-item">
+                    <div class="showcase-icon">🔄</div>
+                    <div class="showcase-title">Versionning</div>
+                    <div class="showcase-desc">Historique complet</div>
+                </div>
+                <div class="showcase-item">
+                    <div class="showcase-icon">✅</div>
+                    <div class="showcase-title">Validation</div>
+                    <div class="showcase-desc">Workflow intégré</div>
+                </div>
+                <div class="showcase-item">
+                    <div class="showcase-icon">📊</div>
+                    <div class="showcase-title">Conformité</div>
+                    <div class="showcase-desc">RGPD & régulation</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Processus -->
+    <section class="report-section" id="process">
+        <div class="section-header reveal">
+            <span class="section-badge">Méthodologie</span>
+            <h2 class="section-title">Déploiement Progressif et Maîtrisé</h2>
+            <p class="section-subtitle">Une approche pragmatique pour des résultats rapides</p>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-content reveal-left">
+                    <h3 style="color: var(--primary); margin-bottom: 15px;">Semaine 1 : Quick Win</h3>
+                    <p style="font-size: 1.1rem; margin-bottom: 15px;">Identification du processus le plus chronophage et développement du premier outil</p>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 5px 0;">✓ Analyse du processus prioritaire</li>
+                        <li style="padding: 5px 0;">✓ Développement prototype</li>
+                        <li style="padding: 5px 0;">✓ Tests avec données réelles</li>
+                        <li style="padding: 5px 0;">✓ Validation équipe</li>
                     </ul>
-                    <p style="margin-top: 10px;"><strong>Exemple concret :</strong> Pour une équipe de taille moyenne, les gains annuels peuvent représenter plusieurs centaines de milliers d'euros en productivité retrouvée et réduction des erreurs.</p>
                 </div>
-            </section>
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">J+7</div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-content reveal-right">
+                    <h3 style="color: var(--primary); margin-bottom: 15px;">Semaine 2 : Déploiement</h3>
+                    <p style="font-size: 1.1rem; margin-bottom: 15px;">Mise en production et formation des utilisateurs</p>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 5px 0;">✓ Installation sur postes</li>
+                        <li style="padding: 5px 0;">✓ Formation équipe (2h)</li>
+                        <li style="padding: 5px 0;">✓ Documentation utilisateur</li>
+                        <li style="padding: 5px 0;">✓ Support actif</li>
+                    </ul>
+                </div>
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">J+14</div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-content reveal-left">
+                    <h3 style="color: var(--primary); margin-bottom: 15px;">Mois 1 : Extension</h3>
+                    <p style="font-size: 1.1rem; margin-bottom: 15px;">Déploiement sur 3-4 processus critiques</p>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 5px 0;">✓ Consolidation automatique</li>
+                        <li style="padding: 5px 0;">✓ Calculs provisions</li>
+                        <li style="padding: 5px 0;">✓ Contrôles qualité</li>
+                        <li style="padding: 5px 0;">✓ Dashboard de suivi</li>
+                    </ul>
+                </div>
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">M+1</div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-content reveal-right">
+                    <h3 style="color: var(--primary); margin-bottom: 15px;">Mois 2-3 : Transformation</h3>
+                    <p style="font-size: 1.1rem; margin-bottom: 15px;">Automatisation complète du cycle de clôture</p>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 5px 0;">✓ Tous processus automatisés</li>
+                        <li style="padding: 5px 0;">✓ Intégration systèmes</li>
+                        <li style="padding: 5px 0;">✓ Optimisation continue</li>
+                        <li style="padding: 5px 0;">✓ ROI mesuré et validé</li>
+                    </ul>
+                </div>
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">M+3</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section ROI -->
+    <section class="report-section" id="roi">
+        <div class="section-header reveal">
+            <span class="section-badge">Impact</span>
+            <h2 class="section-title">Retour sur Investissement Mesurable</h2>
+            <p class="section-subtitle">Des gains concrets dès le premier mois</p>
         </div>
 
-        <div id="solutions" class="tab-pane">
-            <section class="section">
-                <h2 class="section-title"><i class="fas fa-toolbox"></i> Catalogue d'Outils Concrets et Immédiatement Utiles</h2>
-                <p>Voici une sélection d'outils qui peuvent être développés rapidement avec un impact immédiat :</p>
-                
-                <div class="tools-grid">
-                    <div class="tool-card">
-                        <h3><i class="fas fa-layer-group"></i> Consolidation Automatique</h3>
-                        <div class="tool-description">
-                            <p>Automatisation de l'agrégation des données provenant de multiples sources (fichiers Excel, bases SQL, exports systèmes).</p>
-                             <div class="tool-before-after">
-                                <div class="tool-before"><strong>AVANT :</strong> 2-3 jours de manipulation manuelle</div>
-                                <div class="tool-after"><strong>APRÈS :</strong> Processus exécuté en 15 minutes</div>
-                            </div>
-                        </div>
-                        <span class="badge">Gain de temps : 90%</span>
-                    </div>
-                    
-                    <div class="tool-card">
-                        <h3><i class="fas fa-tachometer-alt"></i> Dashboard de Suivi</h3>
-                        <div class="tool-description">
-                            <p>Tableau de bord visuel pour suivre l'avancement des clôtures, identifier les blocages et générer des reportings.</p>
-                            <div class="tool-before-after">
-                                <div class="tool-before"><strong>AVANT :</strong> Manque de visibilité, réunions longues</div>
-                                <div class="tool-after"><strong>APRÈS :</strong> Visibilité temps réel, réunions ciblées</div>
-                            </div>
-                        </div>
-                        <span class="badge">Réduction réunions : 70%</span>
-                    </div>
-                    
-                    <div class="tool-card">
-                        <h3><i class="fas fa-check-double"></i> Contrôles Qualité</h3>
-                        <div class="tool-description">
-                            <p>Vérifications systématiques des données (cohérence, ratios, valeurs aberrantes) avec alertes automatiques.</p>
-                            <div class="tool-before-after">
-                                <div class="tool-before"><strong>AVANT :</strong> Erreurs détectées tardivement</div>
-                                <div class="tool-after"><strong>APRÈS :</strong> Détection immédiate des anomalies</div>
-                            </div>
-                        </div>
-                        <span class="badge">Réduction erreurs : 80%</span>
-                    </div>
-
-                    <div class="tool-card">
-                        <h3><i class="fas fa-file-excel"></i> Générateur de Maquettes</h3>
-                        <div class="tool-description">
-                            <p>Création automatique de fichiers Excel avec structures prédéfinies, formules et mise en forme uniforme.</p>
-                             <div class="tool-before-after">
-                                <div class="tool-before"><strong>AVANT :</strong> Templates inconsistants</div>
-                                <div class="tool-after"><strong>APRÈS :</strong> Standards homogènes, gain de temps</div>
-                            </div>
-                        </div>
-                        <span class="badge">Homogénéisation : 100%</span>
-                    </div>
-
-                     <div class="tool-card">
-                        <h3><i class="fas fa-file-contract"></i> Reporting Réglementaire</h3>
-                        <div class="tool-description">
-                            <p>Génération automatique des tableaux SFCR, QRT Solvabilité II, IFRS 17, ORSA à partir de données collectées.</p>
-                             <div class="tool-before-after">
-                                <div class="tool-before"><strong>AVANT :</strong> Double saisie, délais serrés</div>
-                                <div class="tool-after"><strong>APRÈS :</strong> Données synchronisées, validation auto</div>
-                            </div>
-                        </div>
-                        <span class="badge">Réduction délais : 60%</span>
-                    </div>
-
-                     <div class="tool-card">
-                        <h3><i class="fas fa-robot"></i> Automatisation des CR</h3>
-                        <div class="tool-description">
-                            <p>Génération semi-automatique de CR de réunion et anonymisation automatique des documents (RGPD, audit).</p>
-                             <div class="tool-before-after">
-                                <div class="tool-before"><strong>AVANT :</strong> Rédaction manuelle, non-conformité</div>
-                                <div class="tool-after"><strong>APRÈS :</strong> CR auto, conformité assurée</div>
-                            </div>
-                        </div>
-                        <span class="badge">Gain de temps : 75%</span>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <div id="feuille-route" class="tab-pane">
-            <section class="section">
-                <h2 class="section-title"><i class="fas fa-road"></i> Feuille de Route Accélérée</h2>
-                <p><strong>Déploiement en 1 Semaine</strong> - Notre approche pragmatique permet un déploiement rapide : en une semaine, le premier outil est prêt à être testé, documenté et expliqué aux équipes.</p>
-                
-                <div class="timeline">
-                    <div class="timeline-item">
-                        <div class="timeline-phase"><i class="fas fa-magnifying-glass"></i> Semaine 1 : Proof of Concept</div>
-                        <p>Identification des processus prioritaires et développement du premier outil d'automatisation.</p>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-phase"><i class="fas fa-users"></i> Semaine 2 : Déploiement et Formation</div>
-                        <p>Mise en production et accompagnement des équipes pour une adoption immédiate.</p>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-phase"><i class="fas fa-chart-line"></i> Semaines 3-4 : Optimisation et Extension</div>
-                        <p>Amélioration continue et déploiement sur d'autres processus à fort potentiel.</p>
-                    </div>
-                </div>
-            </section>
-        </div>
-        
-        <div id="gouvernance" class="tab-pane">
-             <section class="section">
-                <h2 class="section-title"><i class="fas fa-lock"></i> Gouvernance, Sécurité, Audit</h2>
-                <div class="governance-grid">
-                    <div class="governance-item">
-                        <h4><i class="fas fa-user-shield"></i> Rôles & Permissions</h4>
-                        <p>Lecture pour tous, écriture limitée (statuts, commentaires). Gestion fine des accès.</p>
-                    </div>
-                    <div class="governance-item">
-                        <h4><i class="fas fa-clipboard-list"></i> Logs & Piste d'Audit</h4>
-                        <p>Traçabilité complète : qui a fait quoi, quand (import, validation, export).</p>
-                    </div>
-                    <div class="governance-item">
-                        <h4><i class="fas fa-database"></i> Catalogue de Données</h4>
-                        <p>Sources, définitions, propriétaire, fréquence. Documentation intégrée pour la transparence.</p>
-                    </div>
-                    <div class="governance-item">
-                        <h4><i class="fas fa-plug"></i> Facilité d'Implémentation</h4>
-                        <p>Sans droits admin, versions portables, packagé en un exécutable. Zéro friction.</p>
-                    </div>
-                </div>
-            </section>
+        <div class="glass-card reveal">
+            <h3 style="font-size: 2rem; margin-bottom: 30px; color: var(--dark);">📈 Évolution de la Performance</h3>
             
-            <section class="section">
-                <h2 class="section-title"><i class="fas fa-comments"></i> Questions Fréquentes</h2>
-                <div class="faq-columns">
-                    <div>
-                        <div class="faq-item">
-                            <div class="faq-question">"On n'a pas le temps."</div>
-                            <div>On commence par un seul flux (clôture), en 2 semaines on a des gains. L'investissement initial est minime.</div>
-                        </div>
-                        <div class="faq-item">
-                            <div class="faq-question">"On a déjà un outil groupe."</div>
-                            <div>C'est complémentaire : on simplifie le quotidien, on alimente l'outil groupe plus proprement et efficacement.</div>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="faq-item">
-                            <div class="faq-question">"Sécurité des données ?"</div>
-                            <div>Local & interne ; anonymisation intégrée ; logs ; rôles clairs. Tout reste dans votre environnement sécurisé.</div>
-                        </div>
-                        <div class="faq-item">
-                            <div class="faq-question">"Maintenance ?"</div>
-                            <div>Code standard, doc simple, paramétrable sans code ; transfert de compétences prévu. Conçu pour être maintenu facilement.</div>
-                        </div>
-                    </div>
+            <div class="chart-container">
+                <h4 class="chart-title">Gains de Productivité sur 6 Mois</h4>
+                <canvas id="performanceChart"></canvas>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 40px;">
+                <div style="text-align: center; padding: 20px; background: var(--bg-light); border-radius: 15px;">
+                    <div style="font-size: 2.5rem; font-weight: 900; color: var(--primary); margin-bottom: 10px;">-70%</div>
+                    <p>Temps de clôture</p>
                 </div>
-            </section>
-        </div>
-        
-        <div id="personnalisation" class="tab-pane">
-            <section class="section">
-                <h2 class="section-title"><i class="fas fa-drafting-compass"></i> Vos Besoins Personnalisables</h2>
-                <div class="faq-columns">
-                    <div>
-                        <h4><i class="fas fa-cog"></i> Processus Spécifiques</h4>
-                        <p>Nous adaptons les outils à vos processus métier spécifiques (provisions, clôture, pricing, etc.).</p>
-                    </div>
-                    <div>
-                        <h4><i class="fas fa-puzzle-piece"></i> Intégration avec vos Outils</h4>
-                        <p>Connecteurs disponibles pour vos systèmes (Excel, SQL, Prophet, ResQ, Power BI, etc.).</p>
-                    </div>
+                <div style="text-align: center; padding: 20px; background: var(--bg-light); border-radius: 15px;">
+                    <div style="font-size: 2.5rem; font-weight: 900; color: var(--accent); margin-bottom: 10px;">+50%</div>
+                    <p>Temps pour l'analyse</p>
                 </div>
-                
-                <div class="service-offer">
-                    <h3><i class="fas fa-handshake"></i> Démarche Collaborative</h3>
-                    <p>Nous travaillons main dans la main avec vos équipes pour identifier, développer, former et assurer un support continu.</p>
+                <div style="text-align: center; padding: 20px; background: var(--bg-light); border-radius: 15px;">
+                    <div style="font-size: 2.5rem; font-weight: 900; color: var(--warning); margin-bottom: 10px;">-80%</div>
+                    <p>Erreurs de traitement</p>
                 </div>
-            </section>
+                <div style="text-align: center; padding: 20px; background: var(--bg-light); border-radius: 15px;">
+                    <div style="font-size: 2.5rem; font-weight: 900; color: var(--gold); margin-bottom: 10px;">100%</div>
+                    <p>Conformité réglementaire</p>
+                </div>
+            </div>
         </div>
 
+        <div class="glass-card reveal">
+            <h3 style="font-size: 2rem; margin-bottom: 30px; color: var(--dark);">💰 Analyse Financière du ROI</h3>
+            
+            <div class="chart-container">
+                <h4 class="chart-title">ROI Cumulé sur 12 Mois</h4>
+                <canvas id="roiChart"></canvas>
+            </div>
+
+            <div style="background: linear-gradient(135deg, rgba(39, 174, 96, 0.1), rgba(26, 82, 118, 0.1)); padding: 30px; border-radius: 20px; margin-top: 30px;">
+                <h4 style="color: var(--dark); margin-bottom: 20px; text-align: center;">Calcul du ROI pour une Équipe de 10 Personnes</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: center;">
+                    <div>
+                        <p style="font-weight: 600; color: var(--primary);">Temps gagné/mois</p>
+                        <p style="font-size: 1.5rem; font-weight: 700;">150 jours</p>
+                    </div>
+                    <div>
+                        <p style="font-weight: 600; color: var(--accent);">Valeur créée</p>
+                        <p style="font-size: 1.5rem; font-weight: 700;">75k€/mois</p>
+                    </div>
+                    <div>
+                        <p style="font-weight: 600; color: var(--warning);">Investissement</p>
+                        <p style="font-size: 1.5rem; font-weight: 700;">< 50k€</p>
+                    </div>
+                    <div>
+                        <p style="font-weight: 600; color: var(--gold);">Rentabilisé en</p>
+                        <p style="font-size: 1.5rem; font-weight: 700;">< 1 mois</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card reveal">
+            <h3 style="font-size: 2rem; margin-bottom: 30px; color: var(--dark);">🎯 Bénéfices Stratégiques</h3>
+            
+            <div style="display: grid; gap: 25px;">
+                <div style="padding: 25px; border-left: 4px solid var(--primary); background: var(--bg-light); border-radius: 0 15px 15px 0;">
+                    <h4 style="color: var(--primary); margin-bottom: 15px;">📊 Excellence Opérationnelle</h4>
+                    <p style="margin-bottom: 15px;">Clôtures anticipées, zéro retard sur les deadlines réglementaires, qualité des données irréprochable.</p>
+                    <p><strong style="color: var(--accent);">Impact :</strong> Image de leader auprès des régulateurs et auditeurs</p>
+                </div>
+                
+                <div style="padding: 25px; border-left: 4px solid var(--accent); background: var(--bg-light); border-radius: 0 15px 15px 0;">
+                    <h4 style="color: var(--accent); margin-bottom: 15px;">💡 Valorisation de l'Expertise</h4>
+                    <p style="margin-bottom: 15px;">Vos actuaires se concentrent sur l'analyse prédictive, l'optimisation tarifaire et la stratégie.</p>
+                    <p><strong style="color: var(--accent);">Impact :</strong> Meilleure prise de décision, innovation produits</p>
+                </div>
+                
+                <div style="padding: 25px; border-left: 4px solid var(--warning); background: var(--bg-light); border-radius: 0 15px 15px 0;">
+                    <h4 style="color: var(--warning); margin-bottom: 15px;">🚀 Attractivité RH</h4>
+                    <p style="margin-bottom: 15px;">Environnement moderne et innovant qui attire et retient les meilleurs talents actuariels.</p>
+                    <p><strong style="color: var(--accent);">Impact :</strong> Réduction du turnover, attraction des jeunes diplômés</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Final -->
+    <section class="final-cta" id="contact">
+        <div class="final-cta-content reveal">
+            <h2>Prêt à Transformer vos Processus Actuariels ?</h2>
+            <p>Rejoignez les équipes qui ont déjà automatisé leurs clôtures</p>
+            
+            <div style="background: rgba(255, 255, 255, 0.2); padding: 25px; border-radius: 20px; margin: 40px auto; max-width: 800px; backdrop-filter: blur(10px);">
+                <h3 style="color: white; margin-bottom: 20px; font-size: 1.5rem;">🎯 Notre Engagement</h3>
+                <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px;">
+                    <div style="text-align: center; flex: 1; min-width: 150px;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">⚡</div>
+                        <p style="color: white; font-weight: 600;">Déploiement Rapide</p>
+                        <p style="color: rgba(255,255,255,0.9); font-size: 0.9rem;">1er outil en 1 semaine</p>
+                    </div>
+                    <div style="text-align: center; flex: 1; min-width: 150px;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🎯</div>
+                        <p style="color: white; font-weight: 600;">ROI Garanti</p>
+                        <p style="color: rgba(255,255,255,0.9); font-size: 0.9rem;">Rentabilisé en 30 jours</p>
+                    </div>
+                    <div style="text-align: center; flex: 1; min-width: 150px;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🔒</div>
+                        <p style="color: white; font-weight: 600;">100% Sécurisé</p>
+                        <p style="color: rgba(255,255,255,0.9); font-size: 0.9rem;">Dans votre environnement</p>
+                    </div>
+                    <div style="text-align: center; flex: 1; min-width: 150px;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">📈</div>
+                        <p style="color: white; font-weight: 600;">Évolution Continue</p>
+                        <p style="color: rgba(255,255,255,0.9); font-size: 0.9rem;">Support & optimisation</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: white; padding: 30px; border-radius: 20px; margin: 40px auto; max-width: 600px; text-align: center;">
+                <h3 style="color: var(--primary); margin-bottom: 20px; font-size: 1.8rem;">📞 Contactez-moi directement</h3>
+                <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;">
+                    <div>
+                        <p style="font-size: 1.3rem; color: var(--dark); font-weight: 700; margin-bottom: 5px;">📧 Email</p>
+                        <a href="mailto:hayoun.yossi@gmail.com" style="color: var(--primary); text-decoration: none; font-size: 1.1rem;">hayoun.yossi@gmail.com</a>
+                    </div>
+                    <div>
+                        <p style="font-size: 1.3rem; color: var(--dark); font-weight: 700; margin-bottom: 5px;">📱 Téléphone</p>
+                        <a href="tel:0760884320" style="color: var(--primary); text-decoration: none; font-size: 1.1rem;">07 60 88 43 20</a>
+                    </div>
+                </div>
+                <p style="margin-top: 20px; color: var(--text-light);">Disponible 7j/7 pour discuter de vos projets d'automatisation</p>
+            </div>
+
+            <a href="mailto:hayoun.yossi@gmail.com" class="final-cta-button">
+                📧 hayoun.yossi@gmail.com<br>
+                <span style="font-size: 1rem;">📞 07 60 88 43 20</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Notre Mission</h3>
+                <p>Transformer les processus actuariels par l'automatisation intelligente pour libérer le potentiel des experts et garantir l'excellence opérationnelle.</p>
+            </div>
+            <div class="footer-column">
+                <h3>Solutions</h3>
+                <a href="#solutions">Automatisation Clôture</a><br>
+                <a href="#solutions">Calculs Provisions</a><br>
+                <a href="#solutions">Contrôles Qualité</a><br>
+                <a href="#solutions">Reporting Réglementaire</a>
+            </div>
+            <div class="footer-column">
+                <h3>Ressources</h3>
+                <a href="#">Guide Automatisation</a><br>
+                <a href="#">Calculateur ROI</a><br>
+                <a href="#">Cas d'Usage</a><br>
+                <a href="#">Documentation</a>
+            </div>
+            <div class="footer-column">
+                <h3>Contact Direct</h3>
+                <p>📧 hayoun.yossi@gmail.com</p>
+                <p>📞 07 60 88 43 20</p>
+                <p style="margin-top: 10px; color: var(--accent);">Disponible 7j/7</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Actuariat Digital - Excellence opérationnelle par l'automatisation</p>
+        </div>
+    </footer>
+
+    <!-- Scroll to top -->
+    <div class="scroll-to-top" id="scrollToTop" onclick="scrollToTop()">
+        ↑
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // --- GESTION DES ONGLETS ---
-            const tabs = document.querySelectorAll('.tab-button');
-            const panes = document.querySelectorAll('.tab-pane');
+        // Configuration des particules
+        particlesJS('particles-js', {
+            particles: {
+                number: {
+                    value: 60,
+                    density: {
+                        enable: true,
+                        value_area: 800
+                    }
+                },
+                color: {
+                    value: '#1a5276'
+                },
+                shape: {
+                    type: 'circle'
+                },
+                opacity: {
+                    value: 0.5,
+                    random: false
+                },
+                size: {
+                    value: 3,
+                    random: true
+                },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#1a5276',
+                    opacity: 0.2,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: 'none',
+                    random: false,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: {
+                        enable: true,
+                        mode: 'grab'
+                    },
+                    onclick: {
+                        enable: true,
+                        mode: 'push'
+                    },
+                    resize: true
+                }
+            },
+            retina_detect: true
+        });
 
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    tabs.forEach(t => t.classList.remove('active'));
-                    panes.forEach(p => p.classList.remove('active'));
+        // Typed.js
+        var typed = new Typed('#typed-text', {
+            strings: [
+                'Divisez par 3 vos temps de clôture',
+                'Libérez 50% du temps de vos experts',
+                'Automatisez 80% des tâches répétitives'
+            ],
+            typeSpeed: 50,
+            backSpeed: 30,
+            backDelay: 2000,
+            loop: true
+        });
+
+        // Animation des compteurs
+        const counters = document.querySelectorAll('.stat-number');
+        const speed = 200;
+        
+        const countUp = (counter) => {
+            const target = parseFloat(counter.getAttribute('data-target'));
+            const increment = target / speed;
+            let current = 0;
+            
+            const updateCounter = () => {
+                current += increment;
+                if (current < target) {
+                    counter.textContent = Math.ceil(current);
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    counter.textContent = Math.ceil(target);
+                }
+            };
+            
+            updateCounter();
+        };
+
+        // Intersection Observer
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
                     
-                    tab.classList.add('active');
-                    document.getElementById(tab.dataset.tab).classList.add('active');
-                    
-                    animateSections();
-                });
+                    // Déclencher les compteurs
+                    if (entry.target.classList.contains('stat-card')) {
+                        const counter = entry.target.querySelector('.stat-number');
+                        if (counter && !counter.classList.contains('counted')) {
+                            counter.classList.add('counted');
+                            countUp(counter);
+                        }
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // Observer tous les éléments avec animation
+        document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
+            observer.observe(el);
+        });
+
+        document.querySelectorAll('.stat-card').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Observer pour animer les barres de progression du temps
+        document.querySelectorAll('.time-breakdown-modern').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Animation des barres de progression du temps
+        const animateProgressBars = () => {
+            const progressBars = document.querySelectorAll('.progress-fill');
+            progressBars.forEach(bar => {
+                const width = bar.getAttribute('data-width');
+                setTimeout(() => {
+                    bar.style.width = width + '%';
+                }, 500);
+            });
+        };
+
+        // Déclencher l'animation quand la section est visible
+        const timeBreakdownObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateProgressBars();
+                    timeBreakdownObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
+
+        document.querySelectorAll('.time-breakdown-modern').forEach(el => {
+            timeBreakdownObserver.observe(el);
+        });
+
+        // Progress bar et scroll effects
+        window.addEventListener('scroll', () => {
+            // Progress bar
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+            
+            // Navbar
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+            
+            // Scroll to top button
+            const scrollToTopBtn = document.getElementById('scrollToTop');
+            if (window.scrollY > 500) {
+                scrollToTopBtn.classList.add('active');
+            } else {
+                scrollToTopBtn.classList.remove('active');
+            }
+        });
+
+        // Navigation active
+        const sections = document.querySelectorAll('section[id]');
+        const navItems = document.querySelectorAll('.nav-item');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
             });
 
-            // --- ANIMATION AU SCROLL ---
-            function animateSections() {
-                const sections = document.querySelectorAll('.tab-pane.active .section');
-                
-                sections.forEach((section, index) => {
-                    section.classList.remove('visible');
-                    
-                    const observer = new IntersectionObserver((entries) => {
-                        entries.forEach(entry => {
-                            if (entry.isIntersecting) {
-                                setTimeout(() => {
-                                    entry.target.classList.add('visible');
-                                }, index * 100);
-                                observer.unobserve(entry.target);
-                            }
-                        });
-                    }, { threshold: 0.1 });
-                    
-                    observer.observe(section);
-                });
-            }
-
-            animateSections();
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href').slice(1) === current) {
+                    item.classList.add('active');
+                }
+            });
         });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Scroll to top
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Hide loader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 500);
+        });
+
+        // Charts.js - Graphiques (timeChart remplacé par visualisation moderne)
+
+        // Chart 2: Performance
+        const ctx2 = document.getElementById('performanceChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: ['Mois 0', 'Mois 1', 'Mois 2', 'Mois 3', 'Mois 4', 'Mois 5', 'Mois 6'],
+                datasets: [
+                    {
+                        label: 'Productivité (%)',
+                        data: [100, 115, 135, 155, 165, 170, 175],
+                        borderColor: 'rgba(26, 82, 118, 1)',
+                        backgroundColor: 'rgba(26, 82, 118, 0.1)',
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Temps de clôture (jours)',
+                        data: [10, 8, 6, 4, 3, 3, 3],
+                        borderColor: 'rgba(39, 174, 96, 1)',
+                        backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Erreurs détectées',
+                        data: [25, 20, 12, 8, 5, 3, 2],
+                        borderColor: 'rgba(231, 76, 60, 1)',
+                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Chart 3: ROI
+        const ctx3 = document.getElementById('roiChart').getContext('2d');
+        new Chart(ctx3, {
+            type: 'bar',
+            data: {
+                labels: ['M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9', 'M10', 'M11', 'M12'],
+                datasets: [{
+                    label: 'ROI Cumulé (k€)',
+                    data: [25, 75, 150, 225, 300, 375, 450, 525, 600, 675, 750, 825],
+                    backgroundColor: 'rgba(39, 174, 96, 0.8)',
+                    borderRadius: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value + ' k€';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Animation des cards
+        gsap.utils.toArray('.process-card').forEach((card, i) => {
+            gsap.from(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 80%',
+                    toggleActions: 'play none none reverse'
+                },
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                delay: i * 0.1,
+                ease: 'power3.out'
+            });
+        });
+
+        // Fonction pour afficher le formulaire de contact
+        function showContactForm() {
+            alert('📞 Contactez-moi directement :\n\n📧 Email : hayoun.yossi@gmail.com\n📱 Téléphone : 07 60 88 43 20\n\nDisponible 7j/7 pour discuter de vos besoins d\'automatisation');
+        }
     </script>
 </body>
 </html>
